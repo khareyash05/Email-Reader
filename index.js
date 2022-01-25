@@ -2,6 +2,9 @@ const express = require("express")
 const app = express()
 const Imap = require('imap');
 const {simpleParser} = require('mailparser');
+const converter = require('html-to-markdown');
+const html2md=require('html-to-md')
+const { Base64Decode } = require('base64-stream')
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -17,7 +20,7 @@ const imapConfig = {
   tlsOptions: { rejectUnauthorized: false }
 };
 
-var html , text1
+var html , text1 , markdown;
 
 const getEmails = () => {
   try {
@@ -39,6 +42,11 @@ const getEmails = () => {
                console.log("HTML is here"+textAsHtml);
                text1 = text;
                 html = textAsHtml;
+              //  markdown = converter.convert(html);
+               markdown = html2md(html);
+               console.log("Markdown is here"+markdown);
+               console.log(parsed.attachments);
+               console.log(parsed.attachments[0].content);
               });
             });
           });
@@ -70,7 +78,7 @@ const getEmails = () => {
 getEmails();
 
 app.get("/",(req,res)=>{
-  res.render("index",{text1,html});
+  res.render("index",{text1,html,markdown});
 })
 
 app.listen(3000, () => {
