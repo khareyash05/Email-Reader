@@ -20,7 +20,7 @@ const imapConfig = {
   tlsOptions: { rejectUnauthorized: false }
 };
 
-var html , text1 , markdown;
+var html , text1 , markdown,content1;
 
 const getEmails = () => {
   try {
@@ -46,7 +46,8 @@ const getEmails = () => {
                markdown = html2md(html);
                console.log("Markdown is here"+markdown);
                console.log(parsed.attachments);
-               console.log(parsed.attachments[0].content);
+               content1 = parsed.attachments[0].content;
+              //  console.log("Attachments " +parsed.attachments[0].content); // for attachments
               });
             });
           });
@@ -78,7 +79,7 @@ const getEmails = () => {
 getEmails();
 
 app.get("/",(req,res)=>{
-  res.render("index",{text1,html,markdown});
+  res.render("index",{text1,html,markdown,content1});
 })
 
 app.listen(3000, () => {
