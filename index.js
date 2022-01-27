@@ -2,9 +2,11 @@ const express = require("express")
 const app = express()
 const Imap = require('imap');
 const {simpleParser} = require('mailparser');
-const converter = require('html-to-markdown');
 const html2md=require('html-to-md')
 const { Base64Decode } = require('base64-stream')
+const base64 = require('base-64');
+const dotenv = require("dotenv")
+dotenv.config({ path: "config.env" })
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -12,8 +14,8 @@ app.use(express.static('public'))
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const imapConfig = {
-  user: 'khareyash05@gmail.com',
-  password: 'rogermymaster',
+  user: process.env.USER,
+  password: process.env.PASS,
   host: 'imap.gmail.com',
   port: 993,
   tls: true,
@@ -47,6 +49,8 @@ const getEmails = () => {
                console.log("Markdown is here"+markdown);
                console.log(parsed.attachments);
                content1 = parsed.attachments[0].content;
+               console.log(content1);
+              //  console.log(base64.encode(parsed.attachments[0].content));
               //  console.log("Attachments " +parsed.attachments[0].content); // for attachments
               });
             });
